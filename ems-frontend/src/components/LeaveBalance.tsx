@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { LeaveBalance } from '../types';
 import { getEmployeeLeaveBalance } from '../services/api';
-import { Card, Table, Typography, Progress } from 'antd';
+import { Card, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { Progress } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
-
-const { Title } = Typography;
 
 const LeaveBalanceComponent: React.FC = () => {
   const [leaveBalances, setLeaveBalances] = useState<LeaveBalance[]>([]);
@@ -28,16 +28,16 @@ const LeaveBalanceComponent: React.FC = () => {
     fetchLeaveBalances();
   }, [user?.employeeId]);
 
-  const columns = [
+  const columns: ColumnsType<LeaveBalance> = [
     {
       title: 'Leave Type',
-      dataIndex: 'leaveTypeName',
-      key: 'leaveTypeName',
+      dataIndex: 'leaveType',
+      key: 'leaveType',
     },
     {
       title: 'Total Days',
-      dataIndex: 'totalDays',
-      key: 'totalDays',
+      dataIndex: 'maxDays',
+      key: 'maxDays',
     },
     {
       title: 'Used Days',
@@ -54,7 +54,7 @@ const LeaveBalanceComponent: React.FC = () => {
       key: 'progress',
       render: (record: LeaveBalance) => (
         <Progress
-          percent={Math.round((record.usedDays / record.totalDays) * 100)}
+          percent={Math.round((record.usedDays / record.maxDays) * 100)}
           status={record.remainingDays < 5 ? 'exception' : 'normal'}
         />
       ),
@@ -66,7 +66,7 @@ const LeaveBalanceComponent: React.FC = () => {
       <Table
         dataSource={leaveBalances}
         columns={columns}
-        rowKey="leaveTypeId"
+        rowKey="id"
         pagination={false}
       />
     </Card>

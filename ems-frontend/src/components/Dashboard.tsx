@@ -1,12 +1,11 @@
 import React from 'react';
 import { Row, Col, Card, Statistic, Table } from 'antd';
-import { useAuth } from '../contexts/AuthContext';
+import type { ColumnsType } from 'antd/es/table';
 import { DashboardStats } from '../types';
 import LeaveBalanceComponent from './LeaveBalance';
 import { getDashboardStats } from '../services/api';
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
   const [stats, setStats] = React.useState<DashboardStats | null>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -25,7 +24,7 @@ const Dashboard: React.FC = () => {
     fetchStats();
   }, []);
 
-  const departmentColumns = [
+  const departmentColumns: ColumnsType<any> = [
     {
       title: 'Department',
       dataIndex: 'departmentName',
@@ -36,6 +35,14 @@ const Dashboard: React.FC = () => {
       dataIndex: 'employeeCount',
       key: 'employeeCount',
     },
+  ];
+
+  const leaveColumns: ColumnsType<any> = [
+    { title: 'Employee', dataIndex: 'employeeName', key: 'employeeName' },
+    { title: 'Start Date', dataIndex: 'startDate', key: 'startDate' },
+    { title: 'End Date', dataIndex: 'endDate', key: 'endDate' },
+    { title: 'Type', dataIndex: 'leaveType', key: 'leaveType' },
+    { title: 'Status', dataIndex: 'statusText', key: 'statusText' },
   ];
 
   return (
@@ -75,7 +82,7 @@ const Dashboard: React.FC = () => {
         <Col span={12}>
           <Card title="Department Distribution" loading={loading}>
             <Table
-              dataSource={stats?.departmentDistribution}
+              dataSource={stats?.departmentDistribution || []}
               columns={departmentColumns}
               rowKey="departmentName"
               pagination={false}
@@ -91,14 +98,8 @@ const Dashboard: React.FC = () => {
         <Col span={24}>
           <Card title="Recent Leaves" loading={loading}>
             <Table
-              dataSource={stats?.recentLeaves}
-              columns={[
-                { title: 'Employee', dataIndex: 'employeeName', key: 'employeeName' },
-                { title: 'Start Date', dataIndex: 'startDate', key: 'startDate' },
-                { title: 'End Date', dataIndex: 'endDate', key: 'endDate' },
-                { title: 'Type', dataIndex: 'leaveType', key: 'leaveType' },
-                { title: 'Status', dataIndex: 'statusText', key: 'statusText' },
-              ]}
+              dataSource={stats?.recentLeaves || []}
+              columns={leaveColumns}
               rowKey="id"
               pagination={{ pageSize: 5 }}
             />
