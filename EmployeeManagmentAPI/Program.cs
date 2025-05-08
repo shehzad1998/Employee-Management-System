@@ -43,7 +43,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Repositories
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-//builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -51,8 +50,6 @@ builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<ILeaveMasterRepository, LeaveMasterRepository>();
 builder.Services.AddScoped<ILeaveBalanceRepository, LeaveBalanceRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-
 
 // Services
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
@@ -63,20 +60,17 @@ builder.Services.AddScoped<IGenericService<DepartmentDTO>, GenericService<Depart
 builder.Services.AddScoped<IGenericService<DesignationDtO>, GenericService<Designation, DesignationDtO>>();
 builder.Services.AddScoped<IGenericService<RoleDTO>, GenericService<Role, RoleDTO>>();
 builder.Services.AddScoped<IGenericService<USerDTO>, GenericService<User, USerDTO>>();
-builder.Services.AddScoped<JwtTokenHelper>(); // Register JwtTokenHelper
-builder.Services.AddHttpContextAccessor(); // required for IHttpContextAccessor
+builder.Services.AddScoped<JwtTokenHelper>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-
-
-// Read JWT settings from appsettings.json
+// JWT config
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(jwtSection);
 var jwtSettings = jwtSection.Get<JwtSettings>();
 var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
 
-// JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -96,7 +90,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Swagger with JWT support
+// Swagger config
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -130,7 +124,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -143,7 +137,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Use CORS before Authentication and Authorization
+// CORS before auth
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
@@ -151,10 +145,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Seeder
 using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<LeaveBalanceSeeder>();
     await seeder.SeedAsync();
 }
 
-app.Run();
+// 🧠 This ensures Render can run the app on the correct port
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+app.Run($"http://0.0.0.0:{port}");
