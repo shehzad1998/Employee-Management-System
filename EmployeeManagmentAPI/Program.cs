@@ -13,6 +13,11 @@ using EmployeeManagmentAPI.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// This loads appsettings.Production.json in production
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
+
 // Add services to the container.
 builder.Services.AddControllers();
 
