@@ -10,6 +10,7 @@ import Leaves from './pages/Leaves';
 import ManagerLeaves from './pages/ManagerLeaves';
 import LeaveBalanceManagement from './pages/LeaveBalanceManagement';
 import Layout from './components/Layout';
+import { AuthProvider } from './contexts/AuthContext';
 
 const theme = createTheme({
   palette: {
@@ -24,7 +25,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const token = localStorage.getItem('token');
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
   return <>{children}</>;
 };
@@ -33,27 +34,29 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="employees" element={<Employees />} />
-            <Route path="departments" element={<Departments />} />
-            <Route path="designations" element={<Designations />} />
-            <Route path="leaves" element={<Leaves />} />
-            <Route path="manager-leaves" element={<ManagerLeaves />} />
-            <Route path="leave-balance" element={<LeaveBalanceManagement />} />
-          </Route>
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="employees" element={<Employees />} />
+              <Route path="departments" element={<Departments />} />
+              <Route path="designations" element={<Designations />} />
+              <Route path="leaves" element={<Leaves />} />
+              <Route path="manager-leaves" element={<ManagerLeaves />} />
+              <Route path="leave-balance" element={<LeaveBalanceManagement />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 };
