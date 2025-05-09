@@ -7,7 +7,6 @@ obj/
 *.dbmdl
 *.pdb
 .vs/
-**/appsettings*.json
 
 # Node.js/React
 node_modules/
