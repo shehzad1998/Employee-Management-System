@@ -12,7 +12,7 @@ import {
   DashboardStats,
 } from "../types";
 
-const API_URL = "https://employee-management-system-hyhl.onrender.com/api";
+const API_URL = "https://employee-management-system-1-pbdl.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_URL,
