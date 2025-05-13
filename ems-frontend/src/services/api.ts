@@ -12,7 +12,7 @@ import {
   DashboardStats,
 } from "../types";
 
-const API_URL = "https://employee-management-system-prod.vercel.app/api";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
