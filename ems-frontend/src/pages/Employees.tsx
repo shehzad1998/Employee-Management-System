@@ -17,10 +17,14 @@ import {
   TableRow,
   IconButton,
   Alert,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Lock as LockIcon } from '@mui/icons-material';
 import { useEmployeeStore } from '../stores/employeeStore';
-import { Employee, EmployeeCreateUpdateDTO } from '../types';
+import { Employee, EmployeeCreateUpdateDTO, Department, Designation } from '../types';
 import * as api from '../services/api';
 
 const Employees: React.FC = () => {
@@ -35,7 +39,7 @@ const Employees: React.FC = () => {
     phone: '',
     departmentId: 0,
     designationId: 0,
-    manager: '',
+    managerId: 0,
     user: {
       username: '',
       email: '',
@@ -48,6 +52,9 @@ const Employees: React.FC = () => {
     newPassword: '',
     confirmPassword: '',
   });
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [designations, setDesignations] = useState<Designation[]>([]);
+  const [roles, setRoles] = useState<{ id: number; name: string }[]>([]);
 
   useEffect(() => {
     const userStr = localStorage.getItem('user');
@@ -61,6 +68,9 @@ const Employees: React.FC = () => {
     }
     
     fetchEmployees();
+    api.getDepartments().then(setDepartments);
+    api.getDesignations().then(setDesignations);
+    api.getRoles().then(setRoles);
   }, []);
 
   useEffect(() => {
@@ -82,7 +92,7 @@ const Employees: React.FC = () => {
         phone: employee.phone,
         departmentId: employee.departmentId,
         designationId: employee.designationId,
-        manager: String(employee.manager),
+        managerId: Number(employee.manager),
         user: {
           username: employee.username,
           email: employee.userEmail,
@@ -97,7 +107,7 @@ const Employees: React.FC = () => {
         phone: '',
         departmentId: 0,
         designationId: 0,
-        manager: '',
+        managerId: 0,
         user: {
           username: '',
           email: '',
@@ -243,33 +253,45 @@ const Employees: React.FC = () => {
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               required
             />
-            <TextField
-              margin="dense"
-              label="Department ID"
-              type="number"
-              fullWidth
-              value={formData.departmentId}
-              onChange={(e) => setFormData({ ...formData, departmentId: Number(e.target.value) })}
-              required
-            />
-            <TextField
-              margin="dense"
-              label="Designation ID"
-              type="number"
-              fullWidth
-              value={formData.designationId}
-              onChange={(e) => setFormData({ ...formData, designationId: Number(e.target.value) })}
-              required
-            />
-            <TextField
-              margin="dense"
-              label="Manager ID"
-              type="number"
-              fullWidth
-              value={formData.manager}
-              onChange={(e) => setFormData({ ...formData, manager: String(e.target.value) })}
-              required
-            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Department</InputLabel>
+              <Select
+                value={formData.departmentId}
+                label="Department"
+                onChange={(e) => setFormData({ ...formData, departmentId: Number(e.target.value) })}
+                required
+              >
+                {departments.map((dept) => (
+                  <MenuItem key={dept.id} value={dept.id}>{dept.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Designation</InputLabel>
+              <Select
+                value={formData.designationId}
+                label="Designation"
+                onChange={(e) => setFormData({ ...formData, designationId: Number(e.target.value) })}
+                required
+              >
+                {designations.map((des) => (
+                  <MenuItem key={des.id} value={des.id}>{des.title}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Manager ID</InputLabel>
+              <Select
+                value={formData.managerId}
+                label="Manager ID"
+                onChange={(e) => setFormData({ ...formData, managerId: Number(e.target.value) })}
+                required
+              >
+                {employees.map((emp) => (
+                  <MenuItem key={emp.id} value={emp.id}>{emp.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               margin="dense"
               label="Username"
@@ -305,6 +327,22 @@ const Employees: React.FC = () => {
               })}
               required={!selectedEmployee}
             />
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Role</InputLabel>
+              <Select
+                value={formData.user.roleId}
+                label="Role"
+                onChange={(e) => setFormData({ 
+                  ...formData, 
+                  user: { ...formData.user, roleId: Number(e.target.value) }
+                })}
+                required
+              >
+                {roles.map((role) => (
+                  <MenuItem key={role.id} value={role.id}>{role.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>

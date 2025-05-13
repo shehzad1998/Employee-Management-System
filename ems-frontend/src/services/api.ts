@@ -103,7 +103,19 @@ export const getEmployee = async (id: number): Promise<Employee> => {
 };
 
 export const createEmployee = async (
-  employeeData: EmployeeCreateUpdateDTO
+  employeeData: {
+    name: string;
+    phone: string;
+    departmentId: number;
+    designationId: number;
+    managerId: number;
+    user: {
+      username: string;
+      email: string;
+      password: string;
+      roleId: number;
+    }
+  }
 ): Promise<Employee> => {
   // Log the request data for debugging
   console.log("Creating employee with data:", employeeData);
@@ -280,5 +292,10 @@ export const updateLeaveBalance = async (
 // Dashboard endpoints
 export const getDashboardStats = async (): Promise<DashboardStats> => {
   const response = await api.get<DashboardStats>("/dashboard/stats");
+  return response.data;
+};
+
+export const getRoles = async (): Promise<{ id: number; name: string }[]> => {
+  const response = await api.get<{ id: number; name: string }[]>("/Role");
   return response.data;
 };

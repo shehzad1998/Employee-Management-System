@@ -26,8 +26,13 @@ export interface EmployeeCreateUpdateDTO {
   phone: string;
   departmentId: number;
   designationId: number;
-  manager: string;
-  user: UserCreateDTO;
+  managerId: number;
+  user: {
+    username: string;
+    email: string;
+    password: string;
+    roleId: number;
+  }
 }
 
 export interface AuthResponse {
