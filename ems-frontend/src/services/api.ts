@@ -84,10 +84,10 @@ export const updateUserPassword = async (
     newPassword: string;
   }
 ): Promise<void> => {
-  await api.put('/User/update-password', {
+  await api.put("/User/update-password", {
     userId,
     oldPassword: passwordData.currentPassword,
-    newPassword: passwordData.newPassword
+    newPassword: passwordData.newPassword,
   });
 };
 
@@ -188,14 +188,17 @@ export const getLeaves = async (): Promise<Leave[]> => {
 export const getEmployeeLeaves = async (
   employeeId: number
 ): Promise<Leave[]> => {
-  console.log('Making API call to getEmployeeLeaves with employeeId:', employeeId);
-  console.log('Full URL:', `${API_URL}/Leave/Employee/${employeeId}`);
+  console.log(
+    "Making API call to getEmployeeLeaves with employeeId:",
+    employeeId
+  );
+  console.log("Full URL:", `${API_URL}/Leave/Employee/${employeeId}`);
   try {
     const response = await api.get<Leave[]>(`/Leave/Employee/${employeeId}`);
-    console.log('getEmployeeLeaves API response:', response);
+    console.log("getEmployeeLeaves API response:", response);
     return response.data;
   } catch (error) {
-    console.error('Error in getEmployeeLeaves:', error);
+    console.error("Error in getEmployeeLeaves:", error);
     throw error;
   }
 };
@@ -244,7 +247,9 @@ export const getLeavesForManager = async (
 export const getEmployeeLeaveBalance = async (
   employeeId: number
 ): Promise<LeaveBalance[]> => {
-  const response = await api.get<LeaveBalance[]>(`/LeaveBalance/employee/${employeeId}`);
+  const response = await api.get<LeaveBalance[]>(
+    `/LeaveBalance/employee/${employeeId}`
+  );
   return response.data;
 };
 
@@ -252,7 +257,9 @@ export const getLeaveBalanceByType = async (
   employeeId: number,
   leaveTypeId: number
 ): Promise<LeaveBalance> => {
-  const response = await api.get<LeaveBalance>(`/LeaveBalance/employee/${employeeId}/type/${leaveTypeId}`);
+  const response = await api.get<LeaveBalance>(
+    `/LeaveBalance/employee/${employeeId}/type/${leaveTypeId}`
+  );
   return response.data;
 };
 
@@ -261,14 +268,17 @@ export const updateLeaveBalance = async (
   leaveTypeId: number,
   totalDays: number
 ): Promise<LeaveBalance> => {
-  const response = await api.put<LeaveBalance>(`/LeaveBalance/employee/${employeeId}/type/${leaveTypeId}`, {
-    totalDays
-  });
+  const response = await api.put<LeaveBalance>(
+    `/LeaveBalance/employee/${employeeId}/type/${leaveTypeId}`,
+    {
+      totalDays,
+    }
+  );
   return response.data;
 };
 
 // Dashboard endpoints
 export const getDashboardStats = async (): Promise<DashboardStats> => {
-  const response = await api.get<DashboardStats>('/dashboard/stats');
+  const response = await api.get<DashboardStats>("/dashboard/stats");
   return response.data;
 };
