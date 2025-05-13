@@ -41,7 +41,6 @@ namespace EmployeeManagmentAPI.Repositories.Implementations
 
             existing.Username = user.Username;
             existing.PasswordHash = user.PasswordHash;
-            existing.RoleId = user.RoleId;
 
             await _context.SaveChangesAsync();
             return existing;
