@@ -9,6 +9,17 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
+    server: {
+      cors: true,
+      proxy: {
+        '/api': {
+          target: 'https://employee-management-system-hyhl.onrender.com',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      }
+    },
     build: {
       outDir: 'dist',
       sourcemap: false,
