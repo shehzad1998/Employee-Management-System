@@ -12,13 +12,13 @@ import {
   DashboardStats,
 } from "../types";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://employee-management-system-hyhl.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
-  },
+    "Content-Type": "application/json"
+  }
 });
 
 // Add token to requests if it exists
