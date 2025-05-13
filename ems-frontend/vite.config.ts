@@ -10,7 +10,11 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
-      cors: true,
+      cors: {
+        origin: 'https://employee-management-system-prod.vercel.app',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization']
+      },
       proxy: {
         '/api': {
           target: 'https://employee-management-system-hyhl.onrender.com',

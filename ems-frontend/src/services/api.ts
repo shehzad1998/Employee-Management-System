@@ -17,12 +17,8 @@ const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://employee-managemen
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization"
-  },
-  withCredentials: true
+    "Content-Type": "application/json"
+  }
 });
 
 // Add token to requests if it exists
