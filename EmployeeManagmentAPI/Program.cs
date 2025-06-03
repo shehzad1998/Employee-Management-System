@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
         {
             builder.WithOrigins(
                 "http://localhost:5173", // Local frontend
-                "https://employee-management-system-u4af.vercel.app" // Production frontend
+                "https://employee-management-system-dev.vercel.app/" // Dev frontend
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
