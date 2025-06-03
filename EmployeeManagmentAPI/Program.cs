@@ -28,8 +28,8 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder.WithOrigins(
-                "http://localhost:5173", // Local frontend
-                "https://employee-management-system-dev.vercel.app/" // Dev frontend
+                "http://localhost:5173",
+                "https://employee-management-system-dev.vercel.app" // ✅ Removed trailing slash
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -140,7 +140,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS before auth
+// ✅ Correct place for CORS before authentication
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
@@ -155,6 +155,6 @@ using (var scope = app.Services.CreateScope())
     await seeder.SeedAsync();
 }
 
-// 🧠 This ensures Render can run the app on the correct port
+// 🧠 For Render deployment
 var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
 app.Run($"http://0.0.0.0:{port}");
